@@ -6,12 +6,19 @@
   "author": "Masoud Zohrabi <mdzzohrabi@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@types/node": "^12.0.10",
     "apollo-boost": "^0.4.0",
     "apollo-cache-inmemory": "^1.6.0",
     "apollo-client": "^2.6.0",
     "apollo-link-http": "^1.5.14",
+    "cross-fetch": "^3.0.4",
     "graphql": "^14.3.0",
     "graphql-tag": "^2.10.1",
+    "invariant": "^2.2.4",
+    "ts-invariant": "^0.4.4",
     "typescript": "^3.4.5"
+  },
+  "devDependencies": {
+    "mongodb": "^3.2.7"
   }
 }

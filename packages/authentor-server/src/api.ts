@@ -5,6 +5,7 @@ import { v4 as uuid } from 'uuid';
 import { getUsers, User } from './connection';
 import { GRAPHQL_SCHEMA_FILE } from "./constants";
 import { AnyScalarType, KeyValuePairScalarType } from './scalarTypes';
+import { Collection } from 'mongodb';
 
 interface Scope {
     scope?: string;
@@ -13,15 +14,8 @@ interface Scope {
     message?: string;
 }
 
-/**
- * Create an GraphQl Server
- * 
- * @author Masoud Zohrabi <mdzzohrabi@gmail.com>
- */
-export async function createApiServer() {
-
-    let users  = await getUsers();
-    let schema = makeExecutableSchema({
+export function createGqlSchema(users: Collection<User>) {
+    return makeExecutableSchema({
         resolverValidationOptions: {
             requireResolversForResolveType: false
         },
@@ -357,7 +351,17 @@ export async function createApiServer() {
             }
         }
     });
+}
 
+/**
+ * Create an GraphQl Server
+ * 
+ * @author Masoud Zohrabi <mdzzohrabi@gmail.com>
+ */
+export async function createApiServer() {
+
+    let users  = await getUsers();
+    let schema = createGqlSchema(users);
     let server = new ApolloServer({ schema });
 
     return server;
