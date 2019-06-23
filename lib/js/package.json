@@ -1,0 +1,17 @@
+{
+  "name": "authentor",
+  "version": "1.0.0",
+  "description": "Authentor Client",
+  "main": "index.js",
+  "author": "Masoud Zohrabi <mdzzohrabi@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-boost": "^0.4.0",
+    "apollo-cache-inmemory": "^1.6.0",
+    "apollo-client": "^2.6.0",
+    "apollo-link-http": "^1.5.14",
+    "graphql": "^14.3.0",
+    "graphql-tag": "^2.10.1",
+    "typescript": "^3.4.5"
+  }
+}

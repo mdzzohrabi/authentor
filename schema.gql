@@ -1,0 +1,178 @@
+####################### Scalars #####################
+scalar Any
+scalar KeyValuePair
+
+######################## Types ######################
+
+"Login result"
+union LoginOrResult = Login | Result
+
+"User Permission token"
+type AclToken {
+    "Access token name"
+    name: String
+
+    "Value (if needed)"
+    value: Any
+}
+
+"Successs Login result"
+type Login {
+
+    "User"
+    user: User
+
+    "Generated/Stored token for later use"
+    token: UserToken
+}
+
+"User"
+type User {
+    id: String
+
+    "Username"
+    username: String
+
+    "First name"
+    firstName: String
+
+    "Last name"
+    lastName: String
+
+    "Email"
+    email: String
+
+    "Last password change date"
+    lastPasswordChange: String
+
+    "Last login date"
+    lastLogin: String
+
+    "Login tokens"
+    tokens: [UserToken]
+
+    "User permission tokens (Access-Token)"
+    acl(filter: [String]): [AclToken]
+
+    "User attributes"
+    attrs(filter: [String]): KeyValuePair
+}
+
+"User login tokens"
+type UserToken {
+    token: String
+    appName: String
+    ip: String
+    createDate: String
+    lastUse: String
+}
+
+"Result template"
+type Result {
+    ok: Boolean
+    message: String
+}
+
+############################ Queries ###########################
+
+"Root Query Definition"
+type Query {
+
+    "Dive into scope query"
+    scope(scope: String!): Scope
+
+    "Scopes collection"
+    scopes: [String]
+}
+
+"Scope definition"
+type Scope {
+
+    "Users list"
+    users: [User]
+
+    "Login user by username and password"
+    login(userName: String!, password: String!, appName: String!, ip: String!): LoginOrResult
+
+    "Login user by stored token"
+    loginByToken(token: String!, appName: String!, ip: String!): LoginOrResult
+
+    "Revoke a token"
+    revokeToken(token: String!, appName: String!): Result
+
+    "Find user by token"
+    userByToken(token: String): User
+
+    "Find user by id"
+    userById(id: String): User
+}
+
+
+########################### Mutations ############################
+
+type Mutation {
+    "dive into an scope"
+    scope(scope: String!): ScopeMutation
+    contextScope: String
+}
+
+type ScopeMutation {
+
+    "Delete all users"
+    deleteAll: Result
+
+    "Create new user"
+    addUser(user: UserInput): UserMutation
+
+    "dive into a user mutations"
+    user(id: String!): UserMutation
+}
+
+## User Mutations
+type UserMutation {
+
+    "Return the current user"
+    scope: String
+
+    "Mutation Result"
+    ok: Boolean
+    message: String
+
+    "Return user information"
+    user: User
+
+    "Change user password"
+    setPassword(oldPassword: String!, newPassword: String!): UserMutation
+
+    "Add token access"
+    addAcl(name: String!, value: [Any]): UserMutation
+
+    "Bulk token access"
+    addBulkAcl(name: [String!]!): UserMutation
+
+    "Delete access token"
+    deleteAcl(name: [String!]!): UserMutation
+
+    "Delete user"
+    delete: UserMutation
+
+    "Set user attribute"
+    setAttr(name: String, value: Any): UserMutation
+
+    "Set user attributes"
+    setAttrs(attrs: KeyValuePair): UserMutation
+
+    "Delete user attributes"
+    deleteAttrs(attrs: [String]): UserMutation
+}
+
+
+############################ Inputs ###############################
+
+input UserInput {
+    username: String!
+    password: String
+    firstName: String
+    lastName: String
+    email: String!
+}
